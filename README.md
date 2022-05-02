@@ -31,7 +31,7 @@ La configuracion del estado global con Redux se encuantra en la carpeta `redux`,
 
 Las llamadas de red son realizadas a través de una instancia de cliente `axios`. Las llamadas de red a la API de Pokemon son hechas via cliente axios y las respuestas exitosas son almacenadas en el estado global ejecutando funciones `actions` de redux que actualizan el estado a través de los reducers.
 
-![Arq](../pokedex-app/public/arq.png)
+![Arq](https://github.com/EfrainRodriguez/pokedex-app/blob/master/public/arq.png?raw=true)
 
 ## Instalación :arrow_down:
 
