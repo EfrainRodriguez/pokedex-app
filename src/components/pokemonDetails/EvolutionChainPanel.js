@@ -3,6 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // material ui
 import { Box, Grid, Card, Typography, ButtonBase } from '@mui/material';
+import { experimentalStyled as styled } from '@mui/material/styles';
+
+const CardStyled = styled(Card)(() => ({
+  transition: 'transform 0.15s ease-in-out',
+  '&:hover': { transform: 'scale3d(1.05, 1.05, 1)' }
+}));
 
 const PokemonEvolution = ({
   pokemon = {},
@@ -12,11 +18,12 @@ const PokemonEvolution = ({
   maxWidthImage = 80,
   onSelectEvolution
 }) => {
-  const Wrapper = hasCard ? Card : Box;
+  const Wrapper = hasCard && pokemon.name ? CardStyled : Box;
+  const ButtonWrapper = pokemon.name ? ButtonBase : Box;
   const handleSelectEvolution = () =>
     onSelectEvolution && onSelectEvolution(pokemon);
   return (
-    <ButtonBase onClick={handleSelectEvolution}>
+    <ButtonWrapper onClick={pokemon.name ? handleSelectEvolution : null}>
       <Wrapper
         sx={{
           width: '120px',
@@ -60,7 +67,7 @@ const PokemonEvolution = ({
           {label}
         </Typography>
       </Wrapper>
-    </ButtonBase>
+    </ButtonWrapper>
   );
 };
 

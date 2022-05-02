@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Pokedex App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto consiste en una aplicación web creada para los amantes de la saga animada de Pokemon, la cual les permite visualizar una lista de Pokemons y los detalles asociados a cada uno de ellos tales como habilidades, tipos, stats, imágens, entre otras cosas.
 
-## Available Scripts
+La aplicación está basada en [React js](https://reactjs.org/), versión `18.1.0`, y usa tecnologias como [Material UI](https://mui.com/) y [Redux Toolkit](https://redux-toolkit.js.org/).
 
-In the project directory, you can run:
+Una versión demo online ha sido desplegada en la plataforma de [Vercel](https://vercel.com/) puede ser accesada desde este [link](https://pokedex-app-drab.vercel.app/).
 
-### `npm start`
+Algunos detalles sobre el desarrollo de aplicación son descritos a continuación:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Funcionalidades :clipboard:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Lista de Pokemons usando hero cards que presentan los datos más relevantes de cada Pokemon como nombre, imagen, tipos, peso y altura.
+- La lista posee paginación para controlar la página que se desea visualizar y la cantiad de Pokemons por cada página.
+- Posee un campo para filtrar Pokemons por el nombre o por el ID de un Pokemon específico.
+- Cada hero card es clicable permitiendo que el usuario sleccione un Pokemon y pueda acceder a una modal con más detalles.
+- La modal presenta 3 secciones dispuesta en Tabs: 1) la sección de informaciones sobre las principales caracteristicas del Pokemon (peso, altura, tipos, habitat, habilidades, género, etc); 2) la sección de cadena de evolución que presenta cada uno de los Pokemons dentro la cadena de evolución del Pokemon seleccionado, donde cada uno de dichos Pokemons presentados también son clicables permitiendo visualizar su información; 3) finalmente, la tercera sección presenta datos eatdisticos relacionados al Pokemon en la forma de barras de progreso circulares.
+- Adicionalmente la aplicación posee modos de tema light y dark.
 
-### `npm test`
+## Estructura del projecto :hammer:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Como fue mencionado antes, esta aplicación está contruida con [React js](https://reactjs.org/) versión `18.1.0`. Como framework de estilos fue usada la biblioteca de [Material UI](https://mui.com/), la cual posee una serie de componentes pre-estilizados que premitem rápidamente construir interfaces gráficas modernas e de alto performance. También ha sido usado [Redux Toolkit](https://redux-toolkit.js.org/) como herramienta de gerenciamiento de estado global de la aplicación para los componentes que eventualmente requieren compartir información y que de alguna manera se encuantran distantes en el arbol del DOM. Redux Toolkit es una versión optimizada de Redux muy sencilla de usar y que ahorra código de boilerplate.
 
-### `npm run build`
+Como parte del setup del projecto se han agregado las configuraciones de [Eslint](https://eslint.org/) y [Prettier](https://prettier.io/) para estandarización y formatación de código dentro del projecto. Las reglas definidas se encuantran en los archivos `.eslintrc.json` y `.prettierrc.json` en la raiz del proyecto.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+La imagen abajo muestra la estrutura del projecto. Las páginas o containers son componentes de alto nivel que pueden accesar directamente al estado global de Redux de la aplicación y ejecutar las llamadas de red. Los componentes por su parte sólo manipulan su estado local directamente mas no tienen accesso directo al estado global. La información es pasada desde las paginas a los componentes via `props`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Las páginas y components se alimentan de la configuración del tema visual usando Material UI. Todas las confgiguraciones referentes al tema se encuantran en la carpeta de `theme` en la raiz del proyecto.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+La configuracion del estado global con Redux se encuantra en la carpeta `redux`, donde se crea la store y los respectivos slices de cada tipo de dato manejado dentro de la aplicación (por ejemplo, pokemons).
 
-### `npm run eject`
+Las llamadas de red son realizadas a través de una instancia de cliente `axios`. Las llamadas de red a la API de Pokemon son hechas via cliente axios y las respuestas exitosas son almacenadas en el estado global ejecutando funciones `actions` de redux que actualizan el estado a través de los reducers.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![Arq](../pokedex-app/src/assets/images/arq.png)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Instalación :arrow_down:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+El repositorio del proyecto puede ser encontrado [aqui](https://github.com/EfrainRodriguez/Mutuus-Pokemon-App.git). Puede bajar o clonar el proyecto usando el comando `clone` de Git:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```console
+git clone https://github.com/EfrainRodriguez/Mutuus-Pokemon-App.git
+```
 
-## Learn More
+Para instalar el proyecto necesita haber instalado `Node js` y `npm` ou `yarn` en su computador. Si es necesário baje Node js desde [aqui](https://nodejs.org/en/).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Ejecute el acomando a continuación para instalar la solución:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```console
+yarn
+```
 
-### Code Splitting
+alternativamente:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```console
+npm install
+```
+Despues de haber instalado la solución y sus dependencias use el comando a continuación para ejecutarla:
 
-### Analyzing the Bundle Size
+```console
+yarn start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+o
 
-### Making a Progressive Web App
+```console
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+La aplicación se abre por defecto de la url local: [http://localhost:3000](http://localhost:3000).
 
-### Advanced Configuration
+## Deployment :rocket:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Una versión demo ha sido desplegada usando o serviço de hosting gratuito de [Vercel](https://vercel.com/), la cual puede ser accesada desde este [link](https://pokedex-app-drab.vercel.app/).
