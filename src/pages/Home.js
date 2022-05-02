@@ -1,6 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 // material ui
-import { Box, IconButton, Grid, Container, Tooltip } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Grid,
+  Container,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import { Close } from '@mui/icons-material';
 // motion
 import { motion } from 'framer-motion';
@@ -11,6 +18,7 @@ import {
   setPokemonData,
   appendPokemonData,
   setPokemonSpeciesData,
+  fetchPokemonByNameOrId,
   fetchPokemonSpeciesData,
   fetchPokemonEvolutionChain,
   fetchManyPokemonsByNameOrId,
@@ -21,7 +29,8 @@ import {
   PokemonCard,
   PokemonDetails,
   Modal,
-  RangePagination
+  RangePagination,
+  PokemonFilter
 } from '../components';
 import { varFadeInUp, varWrapEnter } from '../components/animation';
 
@@ -95,53 +104,92 @@ const Home = () => {
     pokemonRequest(`offset=${(page - 1) * value}&limit=${value}`);
   };
 
+  const handleSearchPokemon = (query) => {
+    const formattedQuery = query.toString().toLowerCase().trim();
+    dispatch(fetchPokemonByNameOrId(formattedQuery))
+      .then((response) => {
+        dispatch(appendPokemonData({ results: [response] }));
+      })
+      .catch(() => {
+        dispatch(appendPokemonData({ results: [] }));
+      });
+  };
+
+  const handleClearFilter = () => {
+    pokemonRequest();
+  };
+
   useEffect(() => {
     pokemonRequest();
   }, [dispatch, pokemonRequest]);
 
   return (
     <Container>
-      <RangePagination
-        page={page}
-        pageSize={limit}
-        count={pokemonData.count}
-        onChangePage={handlePageChange}
-        onChangeItemsPerPage={handleChangeItemsPerPage}
+      <PokemonFilter
+        onSearch={handleSearchPokemon}
+        onClear={handleClearFilter}
       />
-      <motion.div initial="initial" animate="animate" variants={varWrapEnter}>
-        <motion.div variants={varFadeInUp}>
-          {pokemonData.results && (
-            <Grid container spacing={3}>
-              {pokemonData.results.map((pokemon, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <PokemonCard pokemon={pokemon} onClick={handleClickOnCard} />
+      {pokemonData.results && pokemonData.results.length > 0 ? (
+        <>
+          <RangePagination
+            page={page}
+            pageSize={limit}
+            count={pokemonData.count}
+            onChangePage={handlePageChange}
+            onChangeItemsPerPage={handleChangeItemsPerPage}
+          />
+          <motion.div
+            initial="initial"
+            animate="animate"
+            variants={varWrapEnter}
+          >
+            <motion.div variants={varFadeInUp}>
+              {pokemonData.results && (
+                <Grid container spacing={3}>
+                  {pokemonData.results.map((pokemon, index) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                      <PokemonCard
+                        pokemon={pokemon}
+                        onClick={handleClickOnCard}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          )}
-        </motion.div>
-      </motion.div>
-      <Modal fullWidth maxWidth="lg" open={isOpen} onClose={handleCloseModal}>
-        <Box display="flex" justifyContent="end" mt={-2} mr={-2}>
-          <Tooltip title="Close" placement="top-end">
-            <IconButton onClick={handleCloseModal}>
-              <Close color="primary" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-        <PokemonDetails
-          pokemon={selectedPokemon}
-          speciesData={speciesData}
-          evolutionChainData={evolutionChainData}
-        />
-      </Modal>
-      <RangePagination
-        page={page}
-        pageSize={limit}
-        count={pokemonData.count}
-        onChangePage={handlePageChange}
-        onChangeItemsPerPage={handleChangeItemsPerPage}
-      />
+              )}
+            </motion.div>
+          </motion.div>
+          <Modal
+            fullWidth
+            maxWidth="lg"
+            open={isOpen}
+            onClose={handleCloseModal}
+          >
+            <Box display="flex" justifyContent="end" mt={-2} mr={-2}>
+              <Tooltip title="Close" placement="top-end">
+                <IconButton onClick={handleCloseModal}>
+                  <Close color="primary" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <PokemonDetails
+              pokemon={selectedPokemon}
+              speciesData={speciesData}
+              evolutionChainData={evolutionChainData}
+            />
+          </Modal>
+          <RangePagination
+            page={page}
+            pageSize={limit}
+            count={pokemonData.count}
+            onChangePage={handlePageChange}
+            onChangeItemsPerPage={handleChangeItemsPerPage}
+          />
+        </>
+      ) : (
+        <Typography variant="h5" align="center" mt={5}>
+          No results found
+        </Typography>
+      )}
     </Container>
   );
 };

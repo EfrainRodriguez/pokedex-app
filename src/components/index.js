@@ -3,9 +3,16 @@ import Modal from './Modal';
 import RangePagination from './RangePagination';
 
 // home
-import { PokemonCard } from './home';
+import { PokemonCard, PokemonFilter } from './home';
 
 // pokemon details
 import { PokemonDetails } from './pokemonDetails';
 
-export { Modal, PokemonCard, RouteProgress, PokemonDetails, RangePagination };
+export {
+  Modal,
+  PokemonCard,
+  RouteProgress,
+  PokemonFilter,
+  PokemonDetails,
+  RangePagination
+};
