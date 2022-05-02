@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 // prop types
 import PropTypes from 'prop-types';
 // material ui
 import { Box, Button, TextField } from '@mui/material';
 import { SettingsBackupRestore, Search } from '@mui/icons-material';
 
-const PokemonFilter = ({ onSearch, onClear }) => {
-  const [value, setValue] = useState('');
-
+const PokemonFilter = ({ value, onSearch, onClear, onChange }) => {
   const handleSearch = () => onSearch && onSearch(value);
-  const handleChange = (e) => setValue(e.target.value);
-  const handleClear = () => {
-    setValue('');
-    return onClear && onClear();
-  };
+  const handleChange = (e) => onChange && onChange(e);
+  const handleClear = () => onClear && onClear();
 
   return (
     <Box px={{ xs: 0, md: 10 }}>
@@ -49,8 +44,10 @@ const PokemonFilter = ({ onSearch, onClear }) => {
 };
 
 PokemonFilter.propTypes = {
+  value: PropTypes.string,
   onSearch: PropTypes.func,
-  onClear: PropTypes.func
+  onClear: PropTypes.func,
+  onChange: PropTypes.func
 };
 
 export default PokemonFilter;

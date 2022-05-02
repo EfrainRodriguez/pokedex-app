@@ -17,7 +17,8 @@ const PokemonImgContainerStyle = styled(Box)({
 
 const PokemonImgStyle = styled('img')({
   width: '80%',
-  height: '80%'
+  height: '80%',
+  maxWidth: '300px'
 });
 
 const PokemonDetails = ({

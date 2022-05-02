@@ -36,14 +36,14 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
     const index = evolutionChainData.findIndex(
       (evolution) => evolution.species.name === pokemon.name
     );
-    if (index === -1) return null;
+    if (index === -1) return [];
     const nextEvolution = evolutionChainData[index + 1];
     const previousEvolution = evolutionChainData[index - 1];
     return [previousEvolution, nextEvolution];
   };
   return (
     <Grid container spacing={3} alignItems="center">
-      <Grid item xs={12} md={6} display="flex" justifyContent="center">
+      <Grid item xs={6} md={6} display="flex" justifyContent="center">
         <Card sx={{ width: '120px', maxWidth: '120px', p: 1 }}>
           {getNextAndPreviousEvolution()[0] ? (
             <PokemonEvolution pokemon={getNextAndPreviousEvolution()[0]} />
@@ -63,7 +63,7 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
           </Typography>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6} display="flex" justifyContent="center">
+      <Grid item xs={6} md={6} display="flex" justifyContent="center">
         <Card sx={{ width: '120px', maxWidth: '120px', p: 1 }}>
           {getNextAndPreviousEvolution()[1] ? (
             <PokemonEvolution pokemon={getNextAndPreviousEvolution()[1]} />
@@ -91,7 +91,7 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
               {index !== evolutionChainData.length - 1 && (
                 <Box
                   flex={1}
-                  borderBottom="dotted"
+                  borderBottom="dotted #ccc"
                   display={{ xs: 'none', md: 'flex' }}
                 />
               )}

@@ -16,7 +16,7 @@ export const pokemonSlice = createSlice({
       next: null
     },
     speciesData: {},
-    evolutionChainData: {}
+    evolutionChainData: []
   },
   reducers: {
     setPokemonData(state, action) {

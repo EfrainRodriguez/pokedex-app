@@ -39,6 +39,7 @@ const Home = () => {
   const [selectedPokemon, setSelectedPokemon] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const [filterValue, setFilterValue] = useState('');
 
   const { pokemonData, speciesData, evolutionChainData } = useSelector(
     (state) => state.pokemons
@@ -51,12 +52,14 @@ const Home = () => {
 
     let pokemons = [];
 
-    chain.evolves_to.map((item) => (pokemons = getPokemonsFromChain(item)));
+    chain.evolves_to.map(
+      (item) => (pokemons = [...pokemons, ...getPokemonsFromChain(item)])
+    );
 
     return [chain.species, ...pokemons];
   };
 
-  const pokemonRequest = useCallback(
+  const pokemonListRequest = useCallback(
     (query) => {
       dispatch(fetchPokemons(query)).then((response) => {
         dispatch(setPokemonData(response.data));
@@ -70,9 +73,26 @@ const Home = () => {
     [dispatch]
   );
 
+  const pokemonRequest = useCallback(
+    (formattedQuery) => {
+      dispatch(fetchPokemonByNameOrId(formattedQuery))
+        .then((response) => {
+          dispatch(appendPokemonData({ results: [response], count: 1 }));
+        })
+        .catch(() => {
+          dispatch(appendPokemonData({ results: [], count: 0 }));
+        })
+        .finally(() => {
+          setPage(1);
+        });
+    },
+    [dispatch]
+  );
+
   const handleClickOnCard = (pokemon) => {
     setSelectedPokemon(pokemon);
     setIsOpen(true);
+    dispatch(setPokemonEvolutionChainData([]));
     dispatch(fetchPokemonSpeciesData(pokemon.id)).then((speciesResponse) => {
       dispatch(setPokemonSpeciesData(speciesResponse.data));
       dispatch(
@@ -94,40 +114,50 @@ const Home = () => {
   const handlePageChange = (event, value) => {
     setPage(value);
     dispatch(appendPokemonData({ results: [] }));
-    pokemonRequest(`offset=${(value - 1) * limit}&limit=${limit}`);
+    if (filterValue) {
+      const formattedQuery = filterValue.toString().toLowerCase().trim();
+      return pokemonRequest(formattedQuery);
+    }
+    return pokemonListRequest(`offset=${(value - 1) * limit}&limit=${limit}`);
   };
 
   const handleChangeItemsPerPage = (event) => {
     const { value } = event.target;
     setLimit(value);
     dispatch(appendPokemonData({ results: [] }));
-    pokemonRequest(`offset=${(page - 1) * value}&limit=${value}`);
+    if (filterValue) {
+      const formattedQuery = filterValue.toString().toLowerCase().trim();
+      return pokemonRequest(formattedQuery);
+    }
+    return pokemonListRequest(`offset=${(page - 1) * value}&limit=${value}`);
   };
 
-  const handleSearchPokemon = (query) => {
-    const formattedQuery = query.toString().toLowerCase().trim();
-    dispatch(fetchPokemonByNameOrId(formattedQuery))
-      .then((response) => {
-        dispatch(appendPokemonData({ results: [response] }));
-      })
-      .catch(() => {
-        dispatch(appendPokemonData({ results: [] }));
-      });
+  const handleSearchPokemon = () => {
+    const formattedQuery = filterValue.toString().toLowerCase().trim();
+    return formattedQuery && pokemonRequest(formattedQuery);
   };
 
   const handleClearFilter = () => {
-    pokemonRequest();
+    setFilterValue('');
+    setPage(1);
+    pokemonListRequest();
+  };
+  const handleFilterChange = (event) => {
+    const { value } = event.target;
+    setFilterValue(value);
   };
 
   useEffect(() => {
-    pokemonRequest();
-  }, [dispatch, pokemonRequest]);
+    pokemonListRequest();
+  }, [dispatch, pokemonListRequest]);
 
   return (
     <Container>
       <PokemonFilter
+        value={filterValue}
         onSearch={handleSearchPokemon}
         onClear={handleClearFilter}
+        onChange={handleFilterChange}
       />
       {pokemonData.results && pokemonData.results.length > 0 ? (
         <>
