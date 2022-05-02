@@ -1,6 +1,10 @@
 import RouteProgress from './RouteProgress';
+import Modal from './Modal';
 
 // home
 import { PokemonCard } from './home';
 
-export { PokemonCard, RouteProgress };
+// pokemon details
+import { PokemonDetails } from './pokemonDetails';
+
+export { Modal, PokemonCard, RouteProgress, PokemonDetails };

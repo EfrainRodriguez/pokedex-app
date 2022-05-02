@@ -6,7 +6,7 @@ import { styled, alpha } from '@mui/material/styles';
 // custom styles ---------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  zIndex: 10,
+  zIndex: 9999,
   width: '100%',
   height: '100%',
   display: 'flex',

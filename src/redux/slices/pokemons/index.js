@@ -14,7 +14,9 @@ export const pokemonSlice = createSlice({
       count: 0,
       previous: null,
       next: null
-    }
+    },
+    speciesData: {},
+    evolutionChainData: {}
   },
   reducers: {
     setPokemonData(state, action) {
@@ -25,11 +27,22 @@ export const pokemonSlice = createSlice({
         ...state.pokemonData,
         ...action.payload
       };
+    },
+    setPokemonSpeciesData(state, action) {
+      state.speciesData = action.payload;
+    },
+    setPokemonEvolutionChainData(state, action) {
+      state.evolutionChainData = action.payload;
     }
   }
 });
 
-export const { setPokemonData, appendPokemonData } = pokemonSlice.actions;
+export const {
+  setPokemonData,
+  appendPokemonData,
+  setPokemonSpeciesData,
+  setPokemonEvolutionChainData
+} = pokemonSlice.actions;
 
 export default pokemonSlice.reducer;
 
@@ -59,9 +72,7 @@ export const fetchManyPokemonsByNameOrId =
     return Promise.all(
       pokemons.map((pokemon) => dispatch(fetchPokemonByNameOrId(pokemon.name)))
     )
-      .then((response) => {
-        dispatch(appendPokemonData({ results: response }));
-      })
+      .then((response) => response)
       .catch((error) => error)
       .finally(() => {
         dispatch(setLoading(false));
@@ -74,12 +85,8 @@ export const fetchPokemons =
     dispatch(setLoading(true));
     return new Promise((resolve, reject) => {
       axios
-        .get(`pokemon/?${query}`)
+        .get(`/pokemon/?${query}`)
         .then((response) => {
-          dispatch(setPokemonData(response.data));
-          dispatch(
-            fetchManyPokemonsByNameOrId(response.data && response.data.results)
-          );
           resolve(response);
         })
         .catch((error) => {
@@ -90,3 +97,37 @@ export const fetchPokemons =
         });
     });
   };
+
+export const fetchPokemonSpeciesData = (pokemonId) => (dispatch) => {
+  dispatch(setLoading(true));
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/pokemon-species/${pokemonId}`)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  });
+};
+
+export const fetchPokemonEvolutionChain = (chainUrl) => (dispatch) => {
+  dispatch(setLoading(true));
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${chainUrl}`)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  });
+};

@@ -1,21 +1,75 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 // material ui
-import { Grid, Container } from '@mui/material';
+import { Box, IconButton, Grid, Container, Tooltip } from '@mui/material';
+import { Close } from '@mui/icons-material';
 // motion
 import { motion } from 'framer-motion';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPokemons } from '../redux/slices/pokemons';
+import {
+  fetchPokemons,
+  setPokemonData,
+  appendPokemonData,
+  setPokemonSpeciesData,
+  fetchPokemonSpeciesData,
+  fetchPokemonEvolutionChain,
+  fetchManyPokemonsByNameOrId,
+  setPokemonEvolutionChainData
+} from '../redux/slices/pokemons';
 // components
-import { PokemonCard } from '../components';
+import { PokemonCard, PokemonDetails, Modal } from '../components';
 import { varFadeInUp, varWrapEnter } from '../components/animation';
 
 const Home = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState({});
+
+  const { pokemonData, speciesData, evolutionChainData } = useSelector(
+    (state) => state.pokemons
+  );
+
   const dispatch = useDispatch();
-  const { pokemonData } = useSelector((state) => state.pokemons);
+
+  const getPokemonsFromChain = (chain = {}) => {
+    if (chain.evolves_to.length === 0) return [chain.species];
+
+    let pokemons = [];
+
+    chain.evolves_to.map((item) => (pokemons = getPokemonsFromChain(item)));
+
+    return [chain.species, ...pokemons];
+  };
+
+  const handleClickOnCard = (pokemon) => {
+    setSelectedPokemon(pokemon);
+    setIsOpen(true);
+    dispatch(fetchPokemonSpeciesData(pokemon.id)).then((speciesResponse) => {
+      dispatch(setPokemonSpeciesData(speciesResponse.data));
+      dispatch(
+        fetchPokemonEvolutionChain(speciesResponse.data.evolution_chain.url)
+      ).then((evolutionResponse) => {
+        dispatch(
+          fetchManyPokemonsByNameOrId(
+            getPokemonsFromChain(evolutionResponse.data.chain)
+          )
+        ).then((pokemonResponse) => {
+          dispatch(setPokemonEvolutionChainData(pokemonResponse));
+        });
+      });
+    });
+  };
+
+  const handleCloseModal = () => setIsOpen(false);
 
   useEffect(() => {
-    dispatch(fetchPokemons());
+    dispatch(fetchPokemons()).then((response) => {
+      dispatch(setPokemonData(response.data));
+      dispatch(
+        fetchManyPokemonsByNameOrId(response.data && response.data.results)
+      ).then((resultsResponse) => {
+        dispatch(appendPokemonData({ results: resultsResponse }));
+      });
+    });
   }, [dispatch]);
 
   return (
@@ -26,13 +80,27 @@ const Home = () => {
             <Grid container spacing={3}>
               {pokemonData.results.map((pokemon, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                  <PokemonCard pokemon={pokemon} />
+                  <PokemonCard pokemon={pokemon} onClick={handleClickOnCard} />
                 </Grid>
               ))}
             </Grid>
           )}
         </motion.div>
       </motion.div>
+      <Modal fullWidth maxWidth="lg" open={isOpen} onClose={handleCloseModal}>
+        <Box display="flex" justifyContent="end" mt={-2} mr={-2}>
+          <Tooltip title="Close" placement="top-end">
+            <IconButton onClick={handleCloseModal}>
+              <Close color="primary" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <PokemonDetails
+          pokemon={selectedPokemon}
+          speciesData={speciesData}
+          evolutionChainData={evolutionChainData}
+        />
+      </Modal>
     </Container>
   );
 };
