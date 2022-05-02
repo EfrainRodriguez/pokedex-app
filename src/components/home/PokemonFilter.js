@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // material ui
 import { Box, Button, TextField } from '@mui/material';
+import { SettingsBackupRestore, Search } from '@mui/icons-material';
 
 const PokemonFilter = ({ onSearch, onClear }) => {
   const [value, setValue] = useState('');
@@ -30,7 +31,8 @@ const PokemonFilter = ({ onSearch, onClear }) => {
           size="large"
           onClick={handleSearch}
         >
-          Search
+          <Search />
+          &nbsp; Search
         </Button>
         <Button
           variant="outlined"
@@ -38,7 +40,8 @@ const PokemonFilter = ({ onSearch, onClear }) => {
           size="large"
           onClick={handleClear}
         >
-          Clear
+          <SettingsBackupRestore color="primary" />
+          &nbsp; Clear
         </Button>
       </Box>
     </Box>

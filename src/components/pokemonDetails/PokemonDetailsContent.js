@@ -50,7 +50,7 @@ const PokemonDetails = ({
           />
         </PokemonImgContainerStyle>
         <Typography
-          variant="h3"
+          variant="h4"
           letterSpacing={2}
           textTransform="capitalize"
           textAlign="center"

@@ -145,7 +145,7 @@ const Home = () => {
           >
             <motion.div variants={varFadeInUp}>
               {pokemonData.results && (
-                <Grid container spacing={3}>
+                <Grid container spacing={3} justifyContent="center">
                   {pokemonData.results.map((pokemon, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                       <PokemonCard
