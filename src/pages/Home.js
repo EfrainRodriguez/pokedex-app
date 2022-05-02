@@ -205,6 +205,7 @@ const Home = () => {
               pokemon={selectedPokemon}
               speciesData={speciesData}
               evolutionChainData={evolutionChainData}
+              onSelectEvolution={handleClickOnCard}
             />
           </Modal>
           <RangePagination

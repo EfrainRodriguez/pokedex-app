@@ -24,9 +24,13 @@ const PokemonImgStyle = styled('img')({
 const PokemonDetails = ({
   pokemon = {},
   speciesData = {},
-  evolutionChainData = []
+  evolutionChainData = [],
+  onSelectEvolution
 }) => {
   const [currentTab, setCurrentTab] = useState('info');
+
+  const handleSelectEvolution = (e) =>
+    onSelectEvolution && onSelectEvolution(e);
 
   const getTabContent = (tab) => {
     if (tab === 'info')
@@ -36,6 +40,7 @@ const PokemonDetails = ({
         <EvolutionChainPanel
           pokemon={pokemon}
           evolutionChainData={evolutionChainData}
+          onSelectEvolution={handleSelectEvolution}
         />
       );
     if (tab === 'stats') return <StatsPanel pokemon={pokemon} />;
@@ -92,7 +97,8 @@ const PokemonDetails = ({
 PokemonDetails.propTypes = {
   pokemon: PropTypes.object,
   speciesData: PropTypes.object,
-  evolutionChainData: PropTypes.array
+  evolutionChainData: PropTypes.array,
+  onSelectEvolution: PropTypes.func
 };
 
 export default PokemonDetails;

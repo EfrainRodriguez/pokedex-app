@@ -2,36 +2,82 @@ import React from 'react';
 // prop types
 import PropTypes from 'prop-types';
 // material ui
-import { Box, Grid, Card, Typography } from '@mui/material';
+import { Box, Grid, Card, Typography, ButtonBase } from '@mui/material';
 
-const PokemonEvolution = ({ pokemon = {} }) => (
-  <Box>
-    <Box
-      mb={3}
-      maxWidth={70}
-      component="img"
-      margin="auto"
-      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
-    />
-    <Typography
-      variant="body1"
-      fontWeight={700}
-      textAlign="center"
-      textTransform="capitalize"
-      sx={{
-        color: (theme) => theme.palette.primary.main
-      }}
-    >
-      {pokemon.name}
-    </Typography>
-  </Box>
-);
-
-PokemonEvolution.propTypes = {
-  pokemon: PropTypes.object
+const PokemonEvolution = ({
+  pokemon = {},
+  emptyDataText,
+  label,
+  hasCard = true,
+  maxWidthImage = 80,
+  onSelectEvolution
+}) => {
+  const Wrapper = hasCard ? Card : Box;
+  const handleSelectEvolution = () =>
+    onSelectEvolution && onSelectEvolution(pokemon);
+  return (
+    <ButtonBase onClick={handleSelectEvolution}>
+      <Wrapper
+        sx={{
+          width: '120px',
+          maxWidth: '120px',
+          p: 1
+        }}
+      >
+        {pokemon && Object.keys(pokemon).length > 0 ? (
+          <Box>
+            <Box
+              mb={3}
+              maxWidth={maxWidthImage}
+              component="img"
+              margin="auto"
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+            />
+            <Typography
+              variant="body1"
+              fontWeight={700}
+              textAlign="center"
+              textTransform="capitalize"
+              sx={{
+                color: (theme) => theme.palette.primary.main
+              }}
+            >
+              {pokemon.name}
+            </Typography>
+          </Box>
+        ) : (
+          <Typography
+            variant="body1"
+            textAlign="center"
+            sx={{
+              color: (theme) => theme.palette.primary.main
+            }}
+          >
+            {emptyDataText}
+          </Typography>
+        )}
+        <Typography variant="caption" textAlign="center" component="p">
+          {label}
+        </Typography>
+      </Wrapper>
+    </ButtonBase>
+  );
 };
 
-const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
+PokemonEvolution.propTypes = {
+  maxWidthImage: PropTypes.number,
+  pokemon: PropTypes.object,
+  hasCard: PropTypes.bool,
+  emptyDataText: PropTypes.string,
+  label: PropTypes.string,
+  onSelectEvolution: PropTypes.func
+};
+
+const EvolutionChainPanel = ({
+  pokemon = {},
+  evolutionChainData = [],
+  onSelectEvolution
+}) => {
   const getNextAndPreviousEvolution = () => {
     const index = evolutionChainData.findIndex(
       (evolution) => evolution.species.name === pokemon.name
@@ -41,53 +87,36 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
     const previousEvolution = evolutionChainData[index - 1];
     return [previousEvolution, nextEvolution];
   };
+  const handleSelectEvolution = (evolution) =>
+    onSelectEvolution && onSelectEvolution(evolution);
   return (
     <Grid container spacing={3} alignItems="center">
       <Grid item xs={6} md={6} display="flex" justifyContent="center">
-        <Card sx={{ width: '120px', maxWidth: '120px', p: 1 }}>
-          {getNextAndPreviousEvolution()[0] ? (
-            <PokemonEvolution pokemon={getNextAndPreviousEvolution()[0]} />
-          ) : (
-            <Typography
-              variant="body1"
-              textAlign="center"
-              sx={{
-                color: (theme) => theme.palette.primary.main
-              }}
-            >
-              No previous evolution
-            </Typography>
-          )}
-          <Typography variant="caption" textAlign="center" component="p">
-            Previous
-          </Typography>
-        </Card>
+        <PokemonEvolution
+          pokemon={getNextAndPreviousEvolution()[0]}
+          emptyDataText="No previous evolution"
+          label="Previous evolution"
+          onSelectEvolution={handleSelectEvolution}
+        />
       </Grid>
       <Grid item xs={6} md={6} display="flex" justifyContent="center">
-        <Card sx={{ width: '120px', maxWidth: '120px', p: 1 }}>
-          {getNextAndPreviousEvolution()[1] ? (
-            <PokemonEvolution pokemon={getNextAndPreviousEvolution()[1]} />
-          ) : (
-            <Typography
-              variant="body1"
-              textAlign="center"
-              sx={{
-                color: (theme) => theme.palette.primary.main
-              }}
-            >
-              No next evolution
-            </Typography>
-          )}
-          <Typography variant="caption" textAlign="center" component="p">
-            Next
-          </Typography>
-        </Card>
+        <PokemonEvolution
+          pokemon={getNextAndPreviousEvolution()[1]}
+          emptyDataText="No next evolution"
+          label="Next evolution"
+          onSelectEvolution={handleSelectEvolution}
+        />
       </Grid>
       <Grid item xs={12} display={{ md: 'flex' }} flexWrap="wrap">
         {evolutionChainData &&
           evolutionChainData.map((evolution, index) => (
             <React.Fragment key={index}>
-              <PokemonEvolution pokemon={evolution} />
+              <PokemonEvolution
+                maxWidthImage={60}
+                hasCard={false}
+                pokemon={evolution}
+                onSelectEvolution={handleSelectEvolution}
+              />
               {index !== evolutionChainData.length - 1 && (
                 <Box
                   flex={1}
@@ -104,7 +133,8 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
 
 EvolutionChainPanel.propTypes = {
   pokemon: PropTypes.object,
-  evolutionChainData: PropTypes.array
+  evolutionChainData: PropTypes.array,
+  onSelectEvolution: PropTypes.func
 };
 
 export default EvolutionChainPanel;
