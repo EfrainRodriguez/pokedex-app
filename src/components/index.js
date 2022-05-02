@@ -1,3 +1,6 @@
 import RouteProgress from './RouteProgress';
 
-export { RouteProgress };
+// home
+import { PokemonCard } from './home';
+
+export { PokemonCard, RouteProgress };

@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 // slices
 import settings from './slices/settings';
 import common from './slices/common';
+import pokemons from './slices/pokemons';
 
 // persist config -------------------------------------------
 
@@ -18,7 +19,8 @@ const settingsPersistConfig = {
 const store = configureStore({
   reducer: {
     settings: persistReducer(settingsPersistConfig, settings),
-    common
+    common,
+    pokemons
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

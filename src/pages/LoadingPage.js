@@ -30,7 +30,7 @@ const LoadingPage = () => (
     <Box textAlign="center">
       <CircularProgress />
       <Typography mt={2} variant="subtitle1">
-        Cargando datos...
+        Cargando información...
       </Typography>
     </Box>
   </RootStyle>

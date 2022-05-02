@@ -12,8 +12,11 @@ import { LAYOUT } from '../utils/constants';
 
 const RootStyle = styled(AppBar)(({ theme }) => ({
   width: '100%',
+  boxShadow: 'none',
+  backdropFilter: 'blur(6px)',
   color: theme.palette.text.primary,
-  backgroundColor: alpha(theme.palette.background.default, 0.95)
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  backgroundColor: alpha(theme.palette.background.default, 0.75)
 }));
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
@@ -47,9 +50,9 @@ const DashboardNavbar = () => {
         <Box sx={{ flexGrow: 1 }} />
         <Box display="flex" alignItems="center">
           {themeMode === 'light' ? (
-            <Brightness4 color="primary" />
-          ) : (
             <BrightnessHigh color="primary" />
+          ) : (
+            <Brightness4 color="primary" />
           )}
           <Switch checked={!(themeMode === 'light')} onChange={toggleMode} />
         </Box>

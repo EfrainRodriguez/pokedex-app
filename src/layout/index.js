@@ -30,7 +30,8 @@ const MainStyle = styled('div')(({ theme }) => ({
   paddingBottom: theme.spacing(5),
   [theme.breakpoints.up('md')]: {
     padding: theme.spacing(0, 20),
-    paddingTop: LAYOUT.APPBAR_DESKTOP + 24
+    paddingTop: LAYOUT.APPBAR_DESKTOP + 24,
+    paddingBottom: theme.spacing(10)
   }
 }));
 
