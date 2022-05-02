@@ -35,10 +35,10 @@ Las llamadas de red son realizadas a través de una instancia de cliente `axios`
 
 ## Instalación :arrow_down:
 
-El repositorio del proyecto puede ser encontrado [aqui](https://github.com/EfrainRodriguez/Mutuus-Pokemon-App.git). Puede bajar o clonar el proyecto usando el comando `clone` de Git:
+El repositorio del proyecto puede ser encontrado [aqui](https://github.com/EfrainRodriguez/pokedex-app). Puede bajar o clonar el proyecto usando el comando `clone` de Git:
 
 ```console
-git clone https://github.com/EfrainRodriguez/Mutuus-Pokemon-App.git
+git clone https://github.com/EfrainRodriguez/pokedex-app.git
 ```
 
 Para instalar el proyecto necesita haber instalado `Node js` y `npm` ou `yarn` en su computador. Si es necesário baje Node js desde [aqui](https://nodejs.org/en/).
