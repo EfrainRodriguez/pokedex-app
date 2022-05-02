@@ -18,6 +18,9 @@ const PokemonEvolution = ({ pokemon = {} }) => (
       fontWeight={700}
       textAlign="center"
       textTransform="capitalize"
+      sx={{
+        color: (theme) => theme.palette.primary.main
+      }}
     >
       {pokemon.name}
     </Typography>
@@ -45,18 +48,17 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
           {getNextAndPreviousEvolution()[0] ? (
             <PokemonEvolution pokemon={getNextAndPreviousEvolution()[0]} />
           ) : (
-            <Typography variant="body1" textAlign="center">
+            <Typography
+              variant="body1"
+              textAlign="center"
+              sx={{
+                color: (theme) => theme.palette.primary.main
+              }}
+            >
               No previous evolution
             </Typography>
           )}
-          <Typography
-            variant="caption"
-            textAlign="center"
-            component="p"
-            sx={{
-              color: (theme) => theme.palette.primary.main
-            }}
-          >
+          <Typography variant="caption" textAlign="center" component="p">
             Previous
           </Typography>
         </Card>
@@ -66,18 +68,17 @@ const EvolutionChainPanel = ({ pokemon = {}, evolutionChainData = [] }) => {
           {getNextAndPreviousEvolution()[1] ? (
             <PokemonEvolution pokemon={getNextAndPreviousEvolution()[1]} />
           ) : (
-            <Typography variant="body1" textAlign="center">
+            <Typography
+              variant="body1"
+              textAlign="center"
+              sx={{
+                color: (theme) => theme.palette.primary.main
+              }}
+            >
               No next evolution
             </Typography>
           )}
-          <Typography
-            variant="caption"
-            textAlign="center"
-            component="p"
-            sx={{
-              color: (theme) => theme.palette.primary.main
-            }}
-          >
+          <Typography variant="caption" textAlign="center" component="p">
             Next
           </Typography>
         </Card>

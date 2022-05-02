@@ -43,9 +43,6 @@ const StatsPanel = ({ pokemon }) => (
             component="div"
             color="text.secondary"
             textAlign="center"
-            sx={{
-              color: (theme) => theme.palette.primary.main
-            }}
           >
             {stat.stat.name}
           </Typography>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 // material ui
 import { Box, IconButton, Grid, Container, Tooltip } from '@mui/material';
 import { Close } from '@mui/icons-material';
@@ -17,12 +17,19 @@ import {
   setPokemonEvolutionChainData
 } from '../redux/slices/pokemons';
 // components
-import { PokemonCard, PokemonDetails, Modal } from '../components';
+import {
+  PokemonCard,
+  PokemonDetails,
+  Modal,
+  RangePagination
+} from '../components';
 import { varFadeInUp, varWrapEnter } from '../components/animation';
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPokemon, setSelectedPokemon] = useState({});
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
 
   const { pokemonData, speciesData, evolutionChainData } = useSelector(
     (state) => state.pokemons
@@ -39,6 +46,20 @@ const Home = () => {
 
     return [chain.species, ...pokemons];
   };
+
+  const pokemonRequest = useCallback(
+    (query) => {
+      dispatch(fetchPokemons(query)).then((response) => {
+        dispatch(setPokemonData(response.data));
+        dispatch(
+          fetchManyPokemonsByNameOrId(response.data && response.data.results)
+        ).then((resultsResponse) => {
+          dispatch(appendPokemonData({ results: resultsResponse }));
+        });
+      });
+    },
+    [dispatch]
+  );
 
   const handleClickOnCard = (pokemon) => {
     setSelectedPokemon(pokemon);
@@ -61,19 +82,32 @@ const Home = () => {
 
   const handleCloseModal = () => setIsOpen(false);
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    dispatch(appendPokemonData({ results: [] }));
+    pokemonRequest(`offset=${(value - 1) * limit}&limit=${limit}`);
+  };
+
+  const handleChangeItemsPerPage = (event) => {
+    const { value } = event.target;
+    setLimit(value);
+    dispatch(appendPokemonData({ results: [] }));
+    pokemonRequest(`offset=${(page - 1) * value}&limit=${value}`);
+  };
+
   useEffect(() => {
-    dispatch(fetchPokemons()).then((response) => {
-      dispatch(setPokemonData(response.data));
-      dispatch(
-        fetchManyPokemonsByNameOrId(response.data && response.data.results)
-      ).then((resultsResponse) => {
-        dispatch(appendPokemonData({ results: resultsResponse }));
-      });
-    });
-  }, [dispatch]);
+    pokemonRequest();
+  }, [dispatch, pokemonRequest]);
 
   return (
     <Container>
+      <RangePagination
+        page={page}
+        pageSize={limit}
+        count={pokemonData.count}
+        onChangePage={handlePageChange}
+        onChangeItemsPerPage={handleChangeItemsPerPage}
+      />
       <motion.div initial="initial" animate="animate" variants={varWrapEnter}>
         <motion.div variants={varFadeInUp}>
           {pokemonData.results && (
@@ -101,6 +135,13 @@ const Home = () => {
           evolutionChainData={evolutionChainData}
         />
       </Modal>
+      <RangePagination
+        page={page}
+        pageSize={limit}
+        count={pokemonData.count}
+        onChangePage={handlePageChange}
+        onChangeItemsPerPage={handleChangeItemsPerPage}
+      />
     </Container>
   );
 };

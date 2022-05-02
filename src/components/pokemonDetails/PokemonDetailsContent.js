@@ -62,9 +62,6 @@ const PokemonDetails = ({
           textAlign="center"
           textTransform="capitalize"
           mb={4}
-          sx={{
-            color: (theme) => theme.palette.primary.main
-          }}
         >
           {pokemon.id}
         </Typography>

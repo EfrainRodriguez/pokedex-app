@@ -6,18 +6,17 @@ import { Grid, Typography } from '@mui/material';
 
 const ContentInfoItem = ({ label, value }) => (
   <>
-    <Typography variant="body1" textAlign="center" textTransform="capitalize">
-      {value}
-    </Typography>
     <Typography
-      variant="caption"
+      variant="body1"
       textAlign="center"
-      component="p"
-      mb={4}
+      textTransform="capitalize"
       sx={{
         color: (theme) => theme.palette.primary.main
       }}
     >
+      {value}
+    </Typography>
+    <Typography variant="caption" textAlign="center" component="p" mb={4}>
       {label}
     </Typography>
   </>
